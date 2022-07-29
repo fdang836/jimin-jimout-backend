@@ -11,12 +11,29 @@ public class HelloController {
 		return "Greetings from Spring Boot!";
 	}
 
-    @GetMapping("/spot")
+    /*
+    @GetMapping("/api")
     public String callAPI() {
-        String uri = "https://zenquotes.io/api/random";
+        String uri = "https://api.spotify.com/v1/audio-features/345";
         RestTemplate restTemplate = new RestTemplate();
         String result = restTemplate.getForObject(uri, String.class); 
         return result;
     }
+     */
+
+
+    
+    // @GetMapping("/stuff")
+    // public String callAPI() {
+    //     String uri = "https://zenquotes.io/api/random";
+    //     RestTemplate restTemplate = new RestTemplate();
+    //     String result = restTemplate.getForObject(uri, String.class); 
+    //     return result;
+    // }
+    
+
+    
+
+    
     
 }
