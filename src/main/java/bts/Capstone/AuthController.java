@@ -12,6 +12,8 @@ import se.michaelthelin.spotify.model_objects.credentials.ClientCredentials;
 import se.michaelthelin.spotify.requests.authorization.client_credentials.ClientCredentialsRequest;
 import io.github.cdimascio.dotenv.Dotenv;
 import java.net.URI;
+import se.michaelthelin.spotify.model_objects.credentials.AuthorizationCodeCredentials;
+import se.michaelthelin.spotify.requests.authorization.authorization_code.AuthorizationCodeRequest;
 
 
 import org.apache.hc.core5.http.ParseException;
@@ -37,19 +39,18 @@ public class AuthController {
         SpotifyApi spotifyApi = new SpotifyApi.Builder()
             .setClientId(clientID)
             .setClientSecret(clientSecret)
-            .setRedirectUri(redirecturi)
             .build();
         
 
         ClientCredentialsRequest clientCredentialsRequest = spotifyApi.clientCredentials()
             .build();
 
+
         try {
             ClientCredentials clientCredentials = clientCredentialsRequest.execute();
-
             spotifyApi.setAccessToken(clientCredentials.getAccessToken());
+            return "Expires in: " + clientCredentials.getExpiresIn();
 
-            return "This worked";
         } catch (IOException | SpotifyWebApiException | ParseException e) {
             return "This did not work lol";
         }
