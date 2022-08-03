@@ -34,7 +34,7 @@ import se.michaelthelin.spotify.model_objects.specification.Episode;
 @RestController
 public class AuthController {
     @GetMapping("/api")
-	public String index() {
+	public AudioFeatures index() {
         Dotenv dotenv = Dotenv.configure().load();
         String clientID = dotenv.get("CLIENT_ID");
         String clientSecret = dotenv.get("CLIENT_SECRET");
@@ -58,11 +58,11 @@ public class AuthController {
             System.out.println("Token " + clientCredentials.getAccessToken());
             System.out.println("the api call worked");
 
-            // GetAudioFeaturesForTrackRequest getAudioFeaturesForTrackRequest = spotifyApi
-            //     .getAudioFeaturesForTrack("6fqaMyg066xlukvUJWdM2T")
-            //     .build();
-            // AudioFeatures audioFeatures = getAudioFeaturesForTrackRequest.execute();
-            // System.out.println(audioFeatures);
+            GetAudioFeaturesForTrackRequest getAudioFeaturesForTrackRequest = spotifyApi
+                .getAudioFeaturesForTrack("7wd9k6Pik9fpMhBiNdEtYo")
+                .build();
+            AudioFeatures audioFeatures = getAudioFeaturesForTrackRequest.execute();
+            System.out.println(audioFeatures);
 
 
             
@@ -71,20 +71,23 @@ public class AuthController {
             // Playlist playlist = getPlaylistRequest.execute();
             // System.out.println("Name: " + playlist.getName());
 
-            GetPlaylistsItemsRequest getPlaylistsItemsRequest = spotifyApi
-                .getPlaylistsItems("22CFflpj6LBfzI3g5ykVvR")
-                .build();
-            Paging<PlaylistTrack> playlistTrackPaging = getPlaylistsItemsRequest.execute();
-            System.out.println("Total: " + playlistTrackPaging.getTotal());
-            System.out.println("Track's first artist: " + ((Track) playlistTrackPaging.getItems()[0].getTrack()).getArtists()[0]);
-            System.out.println("Track: " + playlistTrackPaging.getItems()[0].getTrack());
+            // GetPlaylistsItemsRequest getPlaylistsItemsRequest = spotifyApi
+            //     .getPlaylistsItems("22CFflpj6LBfzI3g5ykVvR")
+            //     .build();
+            // Paging<PlaylistTrack> playlistTrackPaging = getPlaylistsItemsRequest.execute();
+            // System.out.println("Total: " + playlistTrackPaging.getTotal());
+            // System.out.println("Track's first artist: " + ((Track) playlistTrackPaging.getItems()[0].getTrack()).getArtists()[0]);
+            // System.out.println("track" + playlistTrackPaging);
+        
 
 
-            return "this work";
+            return audioFeatures;
+            // return playlistTrackPaging;
 
         } catch (IOException | SpotifyWebApiException | ParseException e) {
             System.out.println("Error: " + e.getMessage());
-            return "this didn't work";
+            // return "this didn't work";
+            return null;
         }
 
 
