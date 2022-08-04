@@ -28,6 +28,9 @@ allprojects {
         maven { url 'https://jitpack.io' }
     }
 }
-apply plugin: 'application'
 
-mainClassName = 'bts.Capstone.HelloWorld'
+task wrapper(type: Wrapper) {
+    gradleVersion = '7.5'
+}
+
+
