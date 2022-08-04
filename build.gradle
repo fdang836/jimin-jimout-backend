@@ -29,8 +29,8 @@ allprojects {
     }
 }
 
-task wrapper(type: Wrapper) {
-    gradleVersion = '7.5'
-}
+// task wrapper(type: Wrapper) {
+//     gradleVersion = '7.5'
+// }
 
 

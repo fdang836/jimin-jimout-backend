@@ -54,8 +54,7 @@ public class AuthController {
             //Get access token and set to Spotify API
             ClientCredentials clientCredentials = clientCredentialsRequest.execute();
             spotifyApi.setAccessToken(clientCredentials.getAccessToken());
-            // System.out.println("Token " + clientCredentials.getAccessToken());
-            // System.out.println("the api call worked");
+            
 
             //Get items within a playlist
             GetPlaylistsItemsRequest getPlaylistsItemsRequest = spotifyApi
