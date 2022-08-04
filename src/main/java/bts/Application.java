@@ -1,4 +1,4 @@
-package bts.Capstone;
+package bts;
 
 import java.util.Arrays;
 
