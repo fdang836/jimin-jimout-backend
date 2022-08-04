@@ -4,43 +4,39 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import se.michaelthelin.spotify.SpotifyApi;
-// import se.michaelthelin.spotify.SpotifyHttpManager;
 import se.michaelthelin.spotify.model_objects.credentials.ClientCredentials;
 import se.michaelthelin.spotify.requests.authorization.client_credentials.ClientCredentialsRequest;
 import io.github.cdimascio.dotenv.Dotenv;
-// import java.net.URI;
 
 import org.apache.hc.core5.http.ParseException;
 import java.io.IOException;
+import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
-import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 
 import se.michaelthelin.spotify.model_objects.specification.AudioFeatures;
 import se.michaelthelin.spotify.requests.data.tracks.GetAudioFeaturesForTrackRequest;
 
-import se.michaelthelin.spotify.model_objects.specification.Playlist;
-import se.michaelthelin.spotify.requests.data.playlists.GetPlaylistRequest;
-
 import se.michaelthelin.spotify.model_objects.specification.PlaylistTrack;
-import se.michaelthelin.spotify.model_objects.specification.Track;
 import se.michaelthelin.spotify.requests.data.playlists.GetPlaylistsItemsRequest;
 
 import se.michaelthelin.spotify.model_objects.specification.Paging;
 import se.michaelthelin.spotify.model_objects.specification.Track;
-import se.michaelthelin.spotify.model_objects.specification.Episode;
+
+
+
 
 @RestController
 public class AuthController {
     @GetMapping("/api")
-	public AudioFeatures index() {
+	public ArrayList index() {
         Dotenv dotenv = Dotenv.configure().load();
         String clientID = dotenv.get("CLIENT_ID");
         String clientSecret = dotenv.get("CLIENT_SECRET");
 
-        // URI redirecturi = SpotifyHttpManager.makeUri("http:localhost:8080/api/get-user-code");
-        String code = "";
 
         SpotifyApi spotifyApi = new SpotifyApi.Builder()
             .setClientId(clientID)
@@ -55,38 +51,41 @@ public class AuthController {
         try {
             ClientCredentials clientCredentials = clientCredentialsRequest.execute();
             spotifyApi.setAccessToken(clientCredentials.getAccessToken());
-            System.out.println("Token " + clientCredentials.getAccessToken());
-            System.out.println("the api call worked");
+            // System.out.println("Token " + clientCredentials.getAccessToken());
+            // System.out.println("the api call worked");
 
-            GetAudioFeaturesForTrackRequest getAudioFeaturesForTrackRequest = spotifyApi
-                .getAudioFeaturesForTrack("7wd9k6Pik9fpMhBiNdEtYo")
+            GetPlaylistsItemsRequest getPlaylistsItemsRequest = spotifyApi
+                .getPlaylistsItems("3W32s0YGRxVQGnQbCPMJb1")
                 .build();
-            AudioFeatures audioFeatures = getAudioFeaturesForTrackRequest.execute();
-            System.out.println(audioFeatures);
+            Paging<PlaylistTrack> playlistTrackPaging = getPlaylistsItemsRequest.execute();
+            ArrayList data = new ArrayList();
 
 
-            
-            // GetPlaylistRequest getPlaylistRequest = spotifyApi.getPlaylist("22CFflpj6LBfzI3g5ykVvR")
-            //     .build();
-            // Playlist playlist = getPlaylistRequest.execute();
-            // System.out.println("Name: " + playlist.getName());
+            for (int i = 0; i < 50; i++) {
+                Map<String, String> dictionary = new HashMap<String, String>();
+                String id = ((Track) playlistTrackPaging.getItems()[i].getTrack()).getId().toString();
+                String trackName = ((Track) playlistTrackPaging.getItems()[i].getTrack()).getName().toString();
+                String artist = ((Track) playlistTrackPaging.getItems()[i].getTrack()).getArtists()[0].getName().toString();
+                GetAudioFeaturesForTrackRequest getAudioFeaturesForTrackRequest = spotifyApi
+                    .getAudioFeaturesForTrack(id)
+                    .build();
+                AudioFeatures audioFeatures = getAudioFeaturesForTrackRequest.execute();
+                // System.out.println(audioFeatures.getValence());
+                String valenceData = audioFeatures.getValence().toString();
+                dictionary.put("id", id);
+                dictionary.put("trackName", trackName);
+                dictionary.put("valence", valenceData);
+                dictionary.put("artist", artist);
 
-            // GetPlaylistsItemsRequest getPlaylistsItemsRequest = spotifyApi
-            //     .getPlaylistsItems("22CFflpj6LBfzI3g5ykVvR")
-            //     .build();
-            // Paging<PlaylistTrack> playlistTrackPaging = getPlaylistsItemsRequest.execute();
-            // System.out.println("Total: " + playlistTrackPaging.getTotal());
-            // System.out.println("Track's first artist: " + ((Track) playlistTrackPaging.getItems()[0].getTrack()).getArtists()[0]);
-            // System.out.println("track" + playlistTrackPaging);
-        
+                data.add(dictionary);
+                
+            }
 
+            return data;
 
-            return audioFeatures;
-            // return playlistTrackPaging;
 
         } catch (IOException | SpotifyWebApiException | ParseException e) {
             System.out.println("Error: " + e.getMessage());
-            // return "this didn't work";
             return null;
         }
 
