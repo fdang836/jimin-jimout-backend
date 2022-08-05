@@ -34,9 +34,11 @@ public class AuthController {
     @GetMapping("/api")
 	public ArrayList index() {
         //Secret keys
-        Dotenv dotenv = Dotenv.configure().load();
-        String clientID = dotenv.get("CLIENT_ID");
-        String clientSecret = dotenv.get("CLIENT_SECRET");
+        // Dotenv dotenv = Dotenv.configure().load();
+        // String clientID = dotenv.get("CLIENT_ID");
+        // String clientSecret = dotenv.get("CLIENT_SECRET");
+        String clientID = System.getenv("CLIENT_ID");
+        String clientSecret = System.getenv("CLIENT_SECRET");
 
 
         //Sending secret keys to Spotify API
