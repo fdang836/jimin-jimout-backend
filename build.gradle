@@ -16,6 +16,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'se.michaelthelin.spotify:spotify-web-api-java:7.1.0'
 	implementation 'io.github.cdimascio:dotenv-java:2.2.2'
+  testImplementation 'org.apache.httpcomponents:httpclient'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 

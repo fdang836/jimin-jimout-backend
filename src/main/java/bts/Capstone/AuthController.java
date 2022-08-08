@@ -7,6 +7,7 @@ import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.model_objects.credentials.ClientCredentials;
 import se.michaelthelin.spotify.requests.authorization.client_credentials.ClientCredentialsRequest;
 import io.github.cdimascio.dotenv.Dotenv;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import org.apache.hc.core5.http.ParseException;
 import java.io.IOException;
@@ -31,6 +32,7 @@ import se.michaelthelin.spotify.model_objects.specification.Track;
 
 @RestController
 public class AuthController {
+    @CrossOrigin(origins = "*")
     @GetMapping("/api")
 	public ArrayList index() {
         //Secret keys
