@@ -1,6 +1,8 @@
 package bts.Capstone;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import se.michaelthelin.spotify.SpotifyApi;
@@ -26,6 +28,8 @@ import se.michaelthelin.spotify.requests.data.playlists.GetPlaylistsItemsRequest
 
 import se.michaelthelin.spotify.model_objects.specification.Paging;
 import se.michaelthelin.spotify.model_objects.specification.Track;
+import se.michaelthelin.spotify.requests.data.tracks.GetTrackRequest;
+
 
 
 
@@ -36,11 +40,11 @@ public class AuthController {
     @GetMapping("/api")
 	public ArrayList index() {
         //Secret keys
-        // Dotenv dotenv = Dotenv.configure().load();
-        // String clientID = dotenv.get("CLIENT_ID");
-        // String clientSecret = dotenv.get("CLIENT_SECRET");
-        String clientID = System.getenv("CLIENT_ID");
-        String clientSecret = System.getenv("CLIENT_SECRET");
+        Dotenv dotenv = Dotenv.configure().load();
+        String clientID = dotenv.get("CLIENT_ID");
+        String clientSecret = dotenv.get("CLIENT_SECRET");
+        // String clientID = System.getenv("CLIENT_ID");
+        // String clientSecret = System.getenv("CLIENT_SECRET");
 
 
         //Sending secret keys to Spotify API
@@ -101,8 +105,41 @@ public class AuthController {
             System.out.println("Error: " + e.getMessage());
             return null;
         }
-
-
 	}
 
-}
+    @CrossOrigin(origins = "*")
+    @GetMapping("/song")
+    public String postBody(@RequestBody String id) {
+        // Dotenv dotenv = Dotenv.configure().load();
+        // String clientID = dotenv.get("CLIENT_ID");
+        // String clientSecret = dotenv.get("CLIENT_SECRET");
+        String clientID = System.getenv("CLIENT_ID");
+        String clientSecret = System.getenv("CLIENT_SECRET");
+        // String id = "2gzhQaCTeNgxpeB2TPllyY";
+
+        //Sending secret keys to Spotify API
+        SpotifyApi spotifyApi = new SpotifyApi.Builder()
+        .setClientId(clientID)
+        .setClientSecret(clientSecret)
+        .build();
+
+        //Building credentials
+        ClientCredentialsRequest clientCredentialsRequest = spotifyApi.clientCredentials()
+        .build();
+        try {
+            //Get access token and set to Spotify API
+            ClientCredentials clientCredentials = clientCredentialsRequest.execute();
+            spotifyApi.setAccessToken(clientCredentials.getAccessToken());
+
+            GetTrackRequest getTrackRequest = spotifyApi.getTrack(id)
+                .build();
+            Track track = getTrackRequest.execute();
+            String URL = track.getExternalUrls().toString();
+
+            return URL;
+        } catch (IOException | SpotifyWebApiException | ParseException e) {
+            System.out.println("Error: " + e.getMessage());
+            return null;
+        }
+
+}}
