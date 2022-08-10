@@ -9,6 +9,8 @@ import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.model_objects.credentials.ClientCredentials;
 import se.michaelthelin.spotify.requests.authorization.client_credentials.ClientCredentialsRequest;
 import io.github.cdimascio.dotenv.Dotenv;
+
+import org.springframework.util.SystemPropertyUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
 import org.apache.hc.core5.http.ParseException;
@@ -29,6 +31,9 @@ import se.michaelthelin.spotify.requests.data.playlists.GetPlaylistsItemsRequest
 import se.michaelthelin.spotify.model_objects.specification.Paging;
 import se.michaelthelin.spotify.model_objects.specification.Track;
 import se.michaelthelin.spotify.requests.data.tracks.GetTrackRequest;
+import se.michaelthelin.spotify.model_objects.specification.AlbumSimplified;
+import se.michaelthelin.spotify.model_objects.specification.Image;
+import se.michaelthelin.spotify.model_objects.specification.ArtistSimplified;
 
 
 
@@ -62,6 +67,7 @@ public class AuthController {
             //Get access token and set to Spotify API
             ClientCredentials clientCredentials = clientCredentialsRequest.execute();
             spotifyApi.setAccessToken(clientCredentials.getAccessToken());
+            // System.out.println(clientCredentials.getAccessToken());
             
 
             //Get items within a playlist
@@ -79,6 +85,9 @@ public class AuthController {
                 String id = ((Track) playlistTrackPaging.getItems()[i].getTrack()).getId().toString();
                 String trackName = ((Track) playlistTrackPaging.getItems()[i].getTrack()).getName().toString();
                 String artist = ((Track) playlistTrackPaging.getItems()[i].getTrack()).getArtists()[0].getName().toString();
+                String image = ((Track) playlistTrackPaging.getItems()[i].getTrack()).getAlbum().getImages()[0].getUrl();
+                String preview = ((Track) playlistTrackPaging.getItems()[i].getTrack()).getPreviewUrl();
+                
 
                 //Get the audio feature for each playlist
                 GetAudioFeaturesForTrackRequest getAudioFeaturesForTrackRequest = spotifyApi
@@ -92,6 +101,8 @@ public class AuthController {
                 dictionary.put("trackName", trackName);
                 dictionary.put("valence", valenceData);
                 dictionary.put("artist", artist);
+                dictionary.put("imageUrl", image);
+                dictionary.put("previewUrl", preview);
 
                 //Add hashmap to arraylist to get returned
                 data.add(dictionary);
