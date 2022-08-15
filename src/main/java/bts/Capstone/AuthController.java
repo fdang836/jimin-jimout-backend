@@ -67,19 +67,18 @@ public class AuthController {
             //Get access token and set to Spotify API
             ClientCredentials clientCredentials = clientCredentialsRequest.execute();
             spotifyApi.setAccessToken(clientCredentials.getAccessToken());
-            // System.out.println(clientCredentials.getAccessToken());
             
 
             //Get items within a playlist
             GetPlaylistsItemsRequest getPlaylistsItemsRequest = spotifyApi
-                .getPlaylistsItems("3W32s0YGRxVQGnQbCPMJb1")
+                .getPlaylistsItems("49vU0mmM84rNCDxIzm2Onr")
                 .build();
             Paging<PlaylistTrack> playlistTrackPaging = getPlaylistsItemsRequest.execute();
 
             ArrayList data = new ArrayList();
 
 
-            for (int i = 0; i < 50; i++) {
+            for (int i = 0; i < 67; i++) {
                 Map<String, String> dictionary = new HashMap<String, String>();
                 //Accessing different values in nested data structure from get items within a playlist
                 String id = ((Track) playlistTrackPaging.getItems()[i].getTrack()).getId().toString();
@@ -118,38 +117,5 @@ public class AuthController {
         }
 	}
 
-    @CrossOrigin(origins = "*")
-    @GetMapping("/song")
-    public String postBody(@RequestBody String id) {
-        // Dotenv dotenv = Dotenv.configure().load();
-        // String clientID = dotenv.get("CLIENT_ID");
-        // String clientSecret = dotenv.get("CLIENT_SECRET");
-        String clientID = System.getenv("CLIENT_ID");
-        String clientSecret = System.getenv("CLIENT_SECRET");
 
-        //Sending secret keys to Spotify API
-        SpotifyApi spotifyApi = new SpotifyApi.Builder()
-        .setClientId(clientID)
-        .setClientSecret(clientSecret)
-        .build();
-
-        //Building credentials
-        ClientCredentialsRequest clientCredentialsRequest = spotifyApi.clientCredentials()
-        .build();
-        try {
-            //Get access token and set to Spotify API
-            ClientCredentials clientCredentials = clientCredentialsRequest.execute();
-            spotifyApi.setAccessToken(clientCredentials.getAccessToken());
-
-            GetTrackRequest getTrackRequest = spotifyApi.getTrack(id)
-                .build();
-            Track track = getTrackRequest.execute();
-            String URL = track.getExternalUrls().toString();
-
-            return URL;
-        } catch (IOException | SpotifyWebApiException | ParseException e) {
-            System.out.println("Error: " + e.getMessage());
-            return null;
-        }
-
-}}
+}
