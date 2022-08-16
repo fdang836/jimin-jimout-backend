@@ -68,10 +68,10 @@ public class AuthController {
             ClientCredentials clientCredentials = clientCredentialsRequest.execute();
             spotifyApi.setAccessToken(clientCredentials.getAccessToken());
             
-
+            String playlistID = System.getenv("PLAYLIST_ID");
             //Get items within a playlist
             GetPlaylistsItemsRequest getPlaylistsItemsRequest = spotifyApi
-                .getPlaylistsItems("49vU0mmM84rNCDxIzm2Onr")
+                .getPlaylistsItems(playlistID)
                 .build();
             Paging<PlaylistTrack> playlistTrackPaging = getPlaylistsItemsRequest.execute();
 
